@@ -1,6 +1,9 @@
 package domain;
 
-import enumeration.*;
+import enumeration.City;
+import enumeration.FoodPrice;
+import enumeration.Meal;
+import enumeration.TicketClass;
 
 public class Passenger {
     private static int idCounter = 19830916;
