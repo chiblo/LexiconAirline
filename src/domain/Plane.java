@@ -19,20 +19,18 @@ public class Plane implements Runnable {
     private City startingPoint;
     private String flightNumber;
     private PlaneStatus status;
-    private ArrayList<Passenger> firstClass = new ArrayList<>();
-    private ArrayList<Passenger> economyClass = new ArrayList<>();
     private ArrayList<Passenger> passengers = new ArrayList<>();
-    private double ticketPrice;
     private int mileage;
+    private int numberOfRows;
     private ExecutorService pool = Executors.newFixedThreadPool(2);
 
 
-    public Plane(String flightNumber, City startingPoint) {
+    public Plane(String flightNumber, City startingPoint, int size) {
         this.startingPoint = startingPoint;
         this.flightNumber = flightNumber;
+        this.numberOfRows = size * 3;
         this.status = PlaneStatus.ON_GROUND;
         this.mileage = (int) (Math.random() * 50000);
-
     }
 
     @Override
@@ -116,15 +114,6 @@ public class Plane implements Runnable {
     }
 
 
-    public void setFirstClass(ArrayList<Passenger> firstClass) {
-        this.firstClass.addAll(firstClass);
-    }
-
-    public void setEconomyClass(ArrayList<Passenger> economyClass) {
-        this.economyClass.addAll(economyClass);
-    }
-
-
     public void getPlaneInfo() {
         StringBuffer sb = new StringBuffer("Flight ");
         sb.append(flightNumber);
@@ -160,30 +149,33 @@ public class Plane implements Runnable {
     }
 
 
-    static void giveSitNumber(ArrayList<Passenger> passengers, TicketClass ticketClass) {
-        int j = 1;
+    static void giveSitNumber(ArrayList<Passenger> passengers) {
+        int firstClassCounter = 0;
+        int secondClassCounter = 0;
 
         if (ticketClass == TicketClass.ECONOMY_CLASS) j = 3;
 
+
         for (int i = 0; i < passengers.size(); i++) {
-            switch (i % 5) {
+            switch (i % 6) {
 
                 case 0:
-                    passengers.get(i).setSeatNumber(((i / 5) + j) + "A");
+                    passengers.get(i).setSeatNumber(((i / 6) + j) + "A");
                 case 1:
-                    passengers.get(i).setSeatNumber(((i / 5) + j) + "B");
+                    passengers.get(i).setSeatNumber(((i / 6) + j) + "B");
                 case 2:
-                    passengers.get(i).setSeatNumber(((i / 5) + j) + "C");
+                    passengers.get(i).setSeatNumber(((i / 6) + j) + "C");
                 case 3:
-                    passengers.get(i).setSeatNumber(((i / 5) + j) + "D");
+                    passengers.get(i).setSeatNumber(((i / 6) + j) + "D");
                 case 4:
-                    passengers.get(i).setSeatNumber(((i / 5) + j) + "E");
+                    passengers.get(i).setSeatNumber(((i / 6) + j) + "E");
+                case 5:
+                    passengers.get(i).setSeatNumber(((i / 6) + j) + "F");
 
             }
         }
 
     }
-
 
     public ArrayList<Passenger> getPassengers() {
         passengers = this.firstClass;
@@ -193,10 +185,6 @@ public class Plane implements Runnable {
 
     public String getFlightNumber() {
         return flightNumber;
-    }
-
-    public void setFlightNumber(String flightNumber) {
-        this.flightNumber = flightNumber;
     }
 
     public PlaneStatus getStatus() {
@@ -215,14 +203,22 @@ public class Plane implements Runnable {
         return startingPoint;
     }
 
-    public double getTicketPrice() {
-        return ticketPrice;
-    }
-
     public void setTicketPrice() {
         for (Passenger p : this.getPassengers()) {
             this.ticketPrice += p.getTicketPrice();
 
         }
+    }
+
+    public int getTotalCapacity() {
+        return numberOfRows*6;
+    }
+
+    public void setDestination(City destination) {
+        this.destination = destination;
+    }
+
+    public void setPassengers(ArrayList<Passenger> passengers) {
+        this.passengers = passengers;
     }
 }

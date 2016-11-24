@@ -94,4 +94,9 @@ public class FlightReservation {
     public double getBaseTicketPrice() {
         return keyFlightTicketClass.getBaseTicketPrice();
     }
+
+    public KeyFlightTicketClass getKeyFlightTicketClass() {
+        return keyFlightTicketClass;
+    }
+
 }

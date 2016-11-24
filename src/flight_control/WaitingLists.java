@@ -1,139 +1,89 @@
 package flight_control;
 
 import domain.FlightReservation;
+import domain.Passenger;
+import domain.Plane;
 import enumeration.City;
+import enumeration.KeyFlightTicketClass;
+import enumeration.TicketClass;
 
 import java.util.ArrayList;
-
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.TreeMap;
 
 /**
  * Created by Bardia on 2016-07-12.
  */
 public class WaitingLists {
 
+    private static TreeMap<KeyFlightTicketClass, ArrayList<FlightReservation>> waitingLists = new TreeMap<>();
+    private static HashMap<City, HashMap<City, Integer>> sizeOfWaitingLists = new HashMap<>();
 
-    static ArrayList<FlightReservation> waitingListRomeParis = new ArrayList<>();
-    static ArrayList<FlightReservation> waitingListParisRome = new ArrayList<>();
-    static ArrayList<FlightReservation> waitingListRomeBerlin = new ArrayList<>();
-    static ArrayList<FlightReservation> waitingListBerlinRome = new ArrayList<>();
-    static ArrayList<FlightReservation> waitingListRomeStockholm = new ArrayList<>();
-    static ArrayList<FlightReservation> waitingListStockholmRome = new ArrayList<>();
-    static ArrayList<FlightReservation> waitingListBerlinParis = new ArrayList<>();
-    static ArrayList<FlightReservation> waitingListParisBerlin = new ArrayList<>();
-    static ArrayList<FlightReservation> waitingListBerlinStockholm = new ArrayList<>();
-    static ArrayList<FlightReservation> waitingListStockholmBerlin = new ArrayList<>();
-    static ArrayList<FlightReservation> waitingListStockholmParis = new ArrayList<>();
-    static ArrayList<FlightReservation> waitingListParisStockholm = new ArrayList<>();
+    static {
+        City[] cities = {City.BERLIN, City.PARIS, City.ROME, City.STOCKHOLM};
+        for (int i = 0; i < 4; i++) {
+            sizeOfWaitingLists.put(cities[i], new HashMap<>());
+            for (int j = 0; j < 4; j++)
+                if (cities[i] != cities[j]) {
+                    waitingLists.put(new KeyFlightTicketClass(cities[i], cities[j], TicketClass.ECONOMY_CLASS), new ArrayList<>());
+                    waitingLists.put(new KeyFlightTicketClass(cities[i], cities[j], TicketClass.FIRST_CLASS), new ArrayList<>());
+                    sizeOfWaitingLists.get(cities[i]).put(cities[j], 0);
+                }
+
+        }
+    }
+
+
+    public static void flightCordinator(Plane plane) {
+        City departure = plane.getStartingPoint();
+        City destination = takeDestination(departure, plane.getFlightNumber());
+        ArrayList<Passenger> passengers = addPassengersToFlight(
+                new KeyFlightTicketClass(departure, destination, TicketClass.FIRST_CLASS), plane.getTotalCapacity() / 3);
+        passengers.addAll(addPassengersToFlight(
+                new KeyFlightTicketClass(departure, destination, TicketClass.ECONOMY_CLASS), 2 * plane.getTotalCapacity() / 3));
+        plane.setPassengers(passengers);
+    }
+
+    private static ArrayList<Passenger> addPassengersToFlight(KeyFlightTicketClass keyFlightTicketClass, int capacity) {
+        ArrayList<Passenger> flightList = new ArrayList<>();
+        synchronized (waitingLists.get(keyFlightTicketClass)) {
+            Iterator<FlightReservation> i = waitingLists.get(keyFlightTicketClass).iterator();
+            while (i.hasNext() || flightList.size() != capacity) {
+                FlightReservation fr = i.next();
+                if ((fr.getNumberOfPassengers() + flightList.size()) <= capacity) {
+                    flightList.addAll(fr.getPassengers());
+                    i.remove();
+                }
+            }
+        }
+        return flightList;
+    }
 
 
     public static City takeDestination(City departure, String flightNumber) {
-        City destination = City.STOCKHOLM;
-        int a = waitingListSize(departure, City.STOCKHOLM);
-        int b = waitingListSize(departure, City.ROME);
-        int c = waitingListSize(departure, City.BERLIN);
-        int d = waitingListSize(departure, City.PARIS);
-
-
-        if (a > Math.max(Math.max(b, c), d)) {
-            destination = City.STOCKHOLM;
-        }
-        if (b > Math.max(Math.max(a, c), d)) {
-            destination = City.ROME;
-        }
-        if (c > Math.max(Math.max(b, a), d)) {
-            destination = City.BERLIN;
-        }
-        if (d > Math.max(Math.max(b, c), a)) {
-            destination = City.PARIS;
-        }
-
-        System.out.println("From " + departure + " to " + City.STOCKHOLM + " " + a +
-                " to " + City.ROME + " " + b +
-                " to " + City.BERLIN + " " + c +
-                " to " + City.PARIS + " " + d + ". Flight " + flightNumber + " destination set to " + destination);
-        return destination;
-
-    }
-
-    static int waitingListSize(City departure, City destination) {
-        int result = 0;
-        if (departure != destination) {
-            try {
-                for (FlightReservation fr : getWaitingList(departure, destination)) {
-                    if (!fr.isInFlight())
-                        result += fr.getNumberOfPassengers();
-                }
-            } catch (NullPointerException e) {
+        City destination = City.BERLIN;
+        int max = -1;
+        for (City city : sizeOfWaitingLists.get(departure).keySet()) {
+            if (sizeOfWaitingLists.get(departure).get(city) > max) {
+                max = sizeOfWaitingLists.get(departure).get(city);
+                destination = city;
             }
         }
-        return result;
+
+        System.out.println("Destination of flight " + flightNumber + " from " + departure + " set to " + destination +
+                " with " + max + " passengers in waiting list.");
+        return destination;
     }
 
-    public static void addToList(FlightReservation flightReservation) {
-        //    try {
-        getWaitingList(flightReservation.getDeparture(), flightReservation.getDestination()).add(flightReservation);
-        //      } catch (ArrayIndexOutOfBoundsException e) {
-        //      }
-    }
+    private static void addToList(FlightReservation flightReservation) {
 
-    public static void printList(City departure, City destination) {
-        getWaitingList(departure, destination).forEach(i -> System.out.println(i.getNumberOfPassengers()));
-        System.out.println(waitingListSize(departure, destination));
-    }
-
-    public static ArrayList<FlightReservation> getWaitingList(City departure, City destination) {
-        switch (departure) {
-            case STOCKHOLM:
-                switch (destination) {
-                    case ROME: {
-                        return waitingListStockholmRome;
-                    }
-                    case BERLIN: {
-                        return waitingListStockholmBerlin;
-                    }
-                    case PARIS: {
-                        return waitingListStockholmParis;
-                    }
-                }
-            case ROME:
-                switch (destination) {
-                    case STOCKHOLM: {
-                        return waitingListRomeStockholm;
-                    }
-                    case BERLIN: {
-                        return waitingListRomeBerlin;
-                    }
-                    case PARIS: {
-                        return waitingListRomeParis;
-                    }
-                }
-            case BERLIN:
-                switch (destination) {
-                    case ROME: {
-                        return waitingListBerlinRome;
-                    }
-                    case STOCKHOLM: {
-                        return waitingListBerlinStockholm;
-                    }
-                    case PARIS: {
-                        return waitingListBerlinParis;
-                    }
-                }
-            case PARIS:
-                switch (destination) {
-                    case ROME: {
-                        return waitingListParisRome;
-                    }
-                    case BERLIN: {
-                        return waitingListParisBerlin;
-                    }
-                    case STOCKHOLM: {
-                        return waitingListParisStockholm;
-                    }
-                }
-        }
-
-        return null;
+        waitingLists.get(flightReservation.getKeyFlightTicketClass()).add(flightReservation);
+        sizeOfWaitingLists.get(flightReservation.getKeyFlightTicketClass().getDeparture())
+                .put(flightReservation.getKeyFlightTicketClass().getDestination(),
+                        sizeOfWaitingLists.get(flightReservation.getKeyFlightTicketClass().getDeparture())
+                                .get(flightReservation.getKeyFlightTicketClass().getDestination()) +
+                                flightReservation.getNumberOfPassengers());
     }
 
 

@@ -5,7 +5,6 @@ import domain.Passenger;
 import domain.Plane;
 import enumeration.City;
 import enumeration.TicketClass;
-
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
@@ -26,8 +25,8 @@ public class FlightListCreator implements Callable<ArrayList<Passenger>> {
         this.departure = plane.getStartingPoint();
         this.destination = plane.getDestination();
         this.ticketClass = ticketClass;
-        if (ticketClass == TicketClass.FIRST_CLASS) maxCapacity = 10;
-        else maxCapacity = 20;
+        if (ticketClass == TicketClass.FIRST_CLASS) maxCapacity = plane.getTotalCapacity()/3;
+        else maxCapacity = 2*plane.getTotalCapacity()/3;
     }
 
     @Override
