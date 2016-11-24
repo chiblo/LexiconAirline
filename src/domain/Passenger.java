@@ -12,13 +12,13 @@ public class Passenger {
 
     public Passenger(FlightReservation flightReservation) {
         id = "PAS" + idCounter;
-        idCounter += (Math.random()*10000000)-5000000;
+        idCounter += (Math.random() * 10000000) - 5000000;
         this.flightReservation = flightReservation;
         this.setRandomMeal();
         setTicketPrice();
     }
 
-    private void setRandomMeal(){
+    private void setRandomMeal() {
         switch ((int) (Math.random() * 3.99)) {
             case 0:
                 meal = Meal.MEAL_PACKAGE_1;

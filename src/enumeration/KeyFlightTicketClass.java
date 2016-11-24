@@ -3,7 +3,7 @@ package enumeration;
 /**
  * Created by Bardia on 2016-11-24.
  */
-public class KeyFlightTicketClass implements Comparable<KeyFlightTicketClass>{
+public class KeyFlightTicketClass implements Comparable<KeyFlightTicketClass> {
 
     private City departure;
     private City destination;
@@ -21,12 +21,10 @@ public class KeyFlightTicketClass implements Comparable<KeyFlightTicketClass>{
 
     @Override
     public int compareTo(KeyFlightTicketClass that) {
-        return departure.compareTo(that.departure)*10000 +
-                destination.compareTo(that.destination)*100 +
+        return departure.compareTo(that.departure) * 10000 +
+                destination.compareTo(that.destination) * 100 +
                 ticketClass.compareTo(that.ticketClass);
     }
-
-
 
     public City getDeparture() {
         return departure;
@@ -43,6 +41,5 @@ public class KeyFlightTicketClass implements Comparable<KeyFlightTicketClass>{
     public double getBaseTicketPrice() {
         return baseTicketPrice;
     }
-
 
 }

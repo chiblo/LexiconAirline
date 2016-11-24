@@ -58,22 +58,22 @@ public class WaitingLists {
     static int waitingListSize(City departure, City destination) {
         int result = 0;
         if (departure != destination) {
-        try {
-            for (FlightReservation fr : getWaitingList(departure, destination)) {
-                if (!fr.isInFlight())
-                    result += fr.getNumberOfPassengers();
+            try {
+                for (FlightReservation fr : getWaitingList(departure, destination)) {
+                    if (!fr.isInFlight())
+                        result += fr.getNumberOfPassengers();
+                }
+            } catch (NullPointerException e) {
             }
-        } catch (NullPointerException e) {
-        }
         }
         return result;
     }
 
     public static void addToList(FlightReservation flightReservation) {
-    //    try {
-            getWaitingList(flightReservation.getDeparture(), flightReservation.getDestination()).add(flightReservation);
-  //      } catch (ArrayIndexOutOfBoundsException e) {
-  //      }
+        //    try {
+        getWaitingList(flightReservation.getDeparture(), flightReservation.getDestination()).add(flightReservation);
+        //      } catch (ArrayIndexOutOfBoundsException e) {
+        //      }
     }
 
     public static void printList(City departure, City destination) {

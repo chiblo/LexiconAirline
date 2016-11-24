@@ -25,7 +25,7 @@ public class FlightReservation {
         this.numberOfPassengers = numberOfPassengers;
         this.reservationNumber = "RES" + resNumber;
         resNumber++;
-        for (int i = 0; i < numberOfPassengers ; i++) {
+        for (int i = 0; i < numberOfPassengers; i++) {
             Passenger p = new Passenger(this);
             passengers.add(p);
         }
@@ -43,8 +43,8 @@ public class FlightReservation {
     }
 
     public void setPrice() {
-        for(Passenger p : passengers)
-        this.price += p.getTicketPrice();
+        for (Passenger p : passengers)
+            this.price += p.getTicketPrice();
     }
 
     public Plane getPlane() {
