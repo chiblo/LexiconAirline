@@ -1,7 +1,7 @@
 package domain;
 
 import enumeration.City;
-import enumeration.Distance;
+import enumeration.KeyFlightTicketClass;
 import enumeration.TicketClass;
 
 import java.util.ArrayList;
@@ -15,23 +15,16 @@ public class FlightReservation {
     private String reservationNumber;
     private String flightNumber;
     private double price;
-    private TicketClass ticketClass;
-    private City destination;
-    private City departure;
     private int numberOfPassengers;
     private boolean isInFlight = false;
-    private double baseTicketPrice;
+    private KeyFlightTicketClass keyFlightTicketClass;
 
 
-    public FlightReservation(int numberOfPassengers, TicketClass ticketClass, City destination, City departure) {
-        this.ticketClass = ticketClass;
-        this.departure = departure;
-        this.destination = destination;
+    public FlightReservation(int numberOfPassengers, KeyFlightTicketClass keyFlightTicketClass) {
+        this.keyFlightTicketClass = keyFlightTicketClass;
         this.numberOfPassengers = numberOfPassengers;
         this.reservationNumber = "RES" + resNumber;
         resNumber++;
-        this.baseTicketPrice = ((Distance.takeDistance(departure, destination)) / 10) + 3500;
-        if (this.ticketClass == TicketClass.FIRST_CLASS) baseTicketPrice *= 4;
         for (int i = 0; i < numberOfPassengers ; i++) {
             Passenger p = new Passenger(this);
             passengers.add(p);
@@ -67,7 +60,7 @@ public class FlightReservation {
     }
 
     public TicketClass getTicketClass() {
-        return ticketClass;
+        return keyFlightTicketClass.getTicketClass();
     }
 
     public int getNumberOfPassengers() {
@@ -83,11 +76,11 @@ public class FlightReservation {
     }
 
     public City getDestination() {
-        return destination;
+        return keyFlightTicketClass.getDestination();
     }
 
     public City getDeparture() {
-        return departure;
+        return keyFlightTicketClass.getDeparture();
     }
 
     public void setFlightNumber(String flightNumber) {
@@ -99,6 +92,6 @@ public class FlightReservation {
     }
 
     public double getBaseTicketPrice() {
-        return baseTicketPrice;
+        return keyFlightTicketClass.getBaseTicketPrice();
     }
 }

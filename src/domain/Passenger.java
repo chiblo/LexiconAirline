@@ -34,7 +34,6 @@ public class Passenger {
         }
     }
 
-//  we can change the price of each individual ticket.
     public void setTicketPrice() {
         this.ticketPrice = flightReservation.getBaseTicketPrice() + FoodPrice.getFoodPrice(this);
         flightReservation.setPrice();
