@@ -149,29 +149,27 @@ public class Plane implements Runnable {
     }
 
 
-    static void giveSitNumber(ArrayList<Passenger> passengers) {
+    private void giveSitNumber(ArrayList<Passenger> passengers) {
         int firstClassCounter = 0;
-        int secondClassCounter = 0;
+        int secondClassCounter = numberOfRows * 2;
+        int seat;
 
-        if (ticketClass == TicketClass.ECONOMY_CLASS) j = 3;
-
-
-        for (int i = 0; i < passengers.size(); i++) {
-            switch (i % 6) {
-
+        for (Passenger p : passengers) {
+            if (p.getTicketClass() == TicketClass.ECONOMY_CLASS) seat = secondClassCounter++;
+            else seat = firstClassCounter++;
+            switch (seat % 6) {
                 case 0:
-                    passengers.get(i).setSeatNumber(((i / 6) + j) + "A");
+                    p.setSeatNumber(((seat / 6) + 1) + "A");break;
                 case 1:
-                    passengers.get(i).setSeatNumber(((i / 6) + j) + "B");
+                    p.setSeatNumber(((seat / 6) + 1) + "B");break;
                 case 2:
-                    passengers.get(i).setSeatNumber(((i / 6) + j) + "C");
+                    p.setSeatNumber(((seat / 6) + 1) + "C");break;
                 case 3:
-                    passengers.get(i).setSeatNumber(((i / 6) + j) + "D");
+                    p.setSeatNumber(((seat / 6) + 1) + "D");break;
                 case 4:
-                    passengers.get(i).setSeatNumber(((i / 6) + j) + "E");
+                    p.setSeatNumber(((seat / 6) + 1) + "E");break;
                 case 5:
-                    passengers.get(i).setSeatNumber(((i / 6) + j) + "F");
-
+                    p.setSeatNumber(((seat / 6) + 1) + "F");break;
             }
         }
 
@@ -211,7 +209,7 @@ public class Plane implements Runnable {
     }
 
     public int getTotalCapacity() {
-        return numberOfRows*6;
+        return numberOfRows * 6;
     }
 
     public void setDestination(City destination) {
