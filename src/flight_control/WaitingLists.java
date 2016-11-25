@@ -16,7 +16,7 @@ import java.util.TreeMap;
  * Created by Bardia on 2016-07-12.
  */
 public class WaitingLists {
-awd oihaoi has hnafsihlasf nlh fas
+
     private static TreeMap<KeyFlightTicketClass, ArrayList<FlightReservation>> waitingLists = new TreeMap<>();
     private static HashMap<City, HashMap<City, Integer>> sizeOfWaitingLists = new HashMap<>();
 
@@ -35,7 +35,7 @@ awd oihaoi has hnafsihlasf nlh fas
     }
 
 
-    public static void flightCordinator(Plane plane) {
+    public static void flightCoordinator(Plane plane) {
         City departure = plane.getStartingPoint();
         City destination = takeDestination(departure, plane.getFlightNumber());
         ArrayList<Passenger> passengers = addPassengersToFlight(

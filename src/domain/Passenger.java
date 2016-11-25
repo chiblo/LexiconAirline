@@ -5,7 +5,11 @@ import enumeration.FoodPrice;
 import enumeration.Meal;
 import enumeration.TicketClass;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+
 public class Passenger {
+    static private HashSet<Passenger> formerCustomer = new HashSet<>();
     private static int idCounter = 19830916;
     private String id;
     private Meal meal;
@@ -82,4 +86,8 @@ public class Passenger {
         return seatNumber;
     }
 
+    public static synchronized void addToFormerCustomers(ArrayList<Passenger> passengers){
+            formerCustomer.addAll(passengers);
+
+    }
 }
