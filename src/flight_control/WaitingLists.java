@@ -60,8 +60,7 @@ public class WaitingLists {
         return flightList;
     }
 
-
-    public static City takeDestination(City departure, String flightNumber) {
+    private static City takeDestination(City departure, String flightNumber) {
         City destination = City.BERLIN;
         int max = -1;
         for (City city : sizeOfWaitingLists.get(departure).keySet()) {
@@ -76,7 +75,7 @@ public class WaitingLists {
         return destination;
     }
 
-    private static void addToList(FlightReservation flightReservation) {
+    static synchronized void addToList(FlightReservation flightReservation) {
 
         waitingLists.get(flightReservation.getKeyFlightTicketClass()).add(flightReservation);
         sizeOfWaitingLists.get(flightReservation.getKeyFlightTicketClass().getDeparture())

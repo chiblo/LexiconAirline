@@ -41,7 +41,6 @@ public class Plane implements Runnable {
                 this.setTicketPrice();
                 status = PlaneStatus.BOARDING;
                 this.getPlaneInfo();
-                System.out.println("Total ticket price is " + this.ticketPrice + ". Our profit is " + (this.ticketPrice) * .3 + ".");
                 Thread.sleep(1500);
 
                 status = PlaneStatus.IN_FLIGHT;
@@ -88,6 +87,9 @@ public class Plane implements Runnable {
 
 
     private void getPlaneInfo() {
+        if (status == PlaneStatus.BOARDING)
+            System.out.println("Total ticket price is " + this.ticketPrice + ". Our profit is " + (this.ticketPrice) * .3 + ".");
+
         if(status == PlaneStatus.IN_FLIGHT)
             System.out.println("\u001B[32m========================================================");
 

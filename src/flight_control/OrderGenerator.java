@@ -14,13 +14,12 @@ public class OrderGenerator implements Runnable {
     public void run() {
         for (int j = 0; j < 100; j++) {
             City departure = getRandomCity();
-            KeyFlightTicketClass keyFlightTicketClass = new KeyFlightTicketClass(departure, setRandomDestination(departure), getRandomTicketClass());
+            KeyFlightTicketClass keyFlightTicketClass = new KeyFlightTicketClass(departure,
+                    setRandomDestination(departure), getRandomTicketClass());
             FlightReservation order = new FlightReservation(((int) (Math.random() * 4.99) + 1),
                     keyFlightTicketClass);
 
-            synchronized (this) {
-                WaitingLists.addToList(order);
-            }
+            WaitingLists.addToList(order);
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {
